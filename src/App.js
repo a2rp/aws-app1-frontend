@@ -6,9 +6,9 @@ import "react-toastify/dist/ReactToastify.css";
 
 function App() {
     if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-        axios.defaults.baseURL = "http://127.0.0.1:3000/api/v1";
+        axios.defaults.baseURL = "http://127.0.0.1:1198/api/v1";
     } else {
-        axios.defaults.baseURL = "http://3.111.215.242:3000/api/v1";
+        axios.defaults.baseURL = "http://3.111.215.242:1198/api/v1";
     }
     const [message, setMessage] = useState("message");
     const [dateTime, setDateTime] = useState(new Date().toISOString());
