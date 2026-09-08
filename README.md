@@ -94,6 +94,16 @@ npm run build
 
 Deploy the generated `build/` directory to any static hosting service. Set `REACT_APP_API_BASE_URL` before building so the compiled frontend uses the intended backend URL. The backend must also allow requests from the frontend origin through CORS.
 
+### GitHub Pages
+
+This repository is configured for GitHub Pages deployment:
+
+```bash
+npm run deploy
+```
+
+The published site is `https://a2rp.github.io/aws-app1-frontend`. Configure the repository's Pages source as the `gh-pages` branch if GitHub has not enabled it automatically.
+
 ## Author
 
 **Ashish Ranjan**  

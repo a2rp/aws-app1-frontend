@@ -118,6 +118,16 @@ npm run winBuild
 
 This sets `GENERATE_SOURCEMAP=false` before running the CRA build.
 
+### GitHub Pages deployment
+
+The `homepage`, `predeploy`, and `deploy` settings in `package.json` are configured for GitHub Pages. Run:
+
+```bash
+npm run deploy
+```
+
+This builds the app and publishes `build/` to the `gh-pages` branch. The expected site URL is `https://a2rp.github.io/aws-app1-frontend`. GitHub Pages must be configured to serve that branch. Set `REACT_APP_API_BASE_URL` before deployment; an HTTPS API URL is required when the Pages site is served over HTTPS.
+
 ## 8. Available scripts
 
 | Script | Description |
