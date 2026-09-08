@@ -1,56 +1,49 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function App() {
-    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-        axios.defaults.baseURL = "http://127.0.0.1:1198/api/v1";
-    } else {
-        axios.defaults.baseURL = "http://3.111.215.242:1198/api/v1";
-    }
-    const [message, setMessage] = useState("message");
-    const [dateTime, setDateTime] = useState(new Date().toISOString());
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" ? "http://127.0.0.1:1198/api/v1" : "http://3.111.215.242:1198/api/v1");
+const api = axios.create({ baseURL: apiBaseUrl, timeout: 10000 });
 
-    const handleSetMessage = async () => {
+function App() {
+    const [message, setMessage] = useState("Connecting to the backend...");
+    const [status, setStatus] = useState("loading");
+    const [dateTime, setDateTime] = useState(() => new Date());
+
+    const fetchMessage = useCallback(async () => {
+        setStatus("loading");
         try {
-            const config = {
-                type: "GET",
-                url: "/a2rp",
-            };
-            const response = await axios(config);
-            console.log(response);
-            const data = response.data;
-            if (data.success === true) {
-                setMessage(data.message);
-            }
+            const { data } = await api.get("/a2rp");
+            if (!data?.success) throw new Error(data?.message || "Backend returned an unsuccessful response.");
+            setMessage(data.message || "Backend is online."); setStatus("online");
         } catch (error) {
-            console.log(error);
-            toast.error(error.message);
-            setMessage(error.message);
+            const errorMessage = axios.isAxiosError(error) ? (error.code === "ECONNABORTED" ? "The backend request timed out." : "Unable to reach the backend.") : error.message;
+            setMessage(errorMessage); setStatus("offline"); toast.error(errorMessage);
         }
-    };
-    useEffect(() => {
-        handleSetMessage();
     }, []);
+    useEffect(() => { fetchMessage(); }, [fetchMessage]);
 
     const handleSetDateTime = () => {
-        const value = new Date().toISOString();
-        setDateTime(value);
+        setDateTime(new Date());
     };
     useEffect(() => {
-        const timeout = setTimeout(handleSetDateTime, 1000 * 1 / 30);
-        return () => { clearTimeout(timeout); };
-    }, [dateTime]);
+        const interval = setInterval(handleSetDateTime, 1000);
+        return () => clearInterval(interval);
+    }, []);
+
+    const formattedDateTime = dateTime.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "medium" });
+    const statusLabel = status === "loading" ? "Checking service" : status === "online" ? "Service online" : "Service unavailable";
 
     return (
-        <div className={styles.container}>
-            <div className={styles.messageFromAPI}>Message from backend &rArr; {message}</div>
-            <div className={styles.dateTime}>Date time &rArr; {dateTime}</div>
-
-            <ToastContainer />
-        </div>
+        <main className={styles.page}><section className={styles.card} aria-labelledby="app-title">
+            <div className={styles.eyebrow}>AWS APP | SYSTEM STATUS</div><h1 id="app-title">Backend connection monitor</h1>
+            <p className={styles.subtitle}>A quick, live view of your application service.</p>
+            <div className={`${styles.status} ${styles[status]}`} role="status" aria-live="polite"><span className={styles.statusDot} aria-hidden="true" />{statusLabel}</div>
+            <div className={styles.panel}><span className={styles.label}>Message from backend</span><p>{message}</p></div>
+            <div className={styles.meta}><div><span className={styles.label}>Local time</span><strong>{formattedDateTime}</strong></div><button className={styles.button} type="button" onClick={fetchMessage} disabled={status === "loading"}>{status === "loading" ? "Checking..." : "Check again"}</button></div>
+        </section><ToastContainer position="bottom-right" autoClose={5000} theme="dark" /></main>
     );
 }
 

@@ -1,70 +1,116 @@
-# Getting Started with Create React App
+# AWS App Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A small React-based status dashboard for checking connectivity with the AWS App backend. The interface requests a message from the backend, shows the service state, and displays the browser's local time.
 
-## Available Scripts
+## What it does
 
-In the project directory, you can run:
+- Calls `GET /a2rp` when the page loads.
+- Displays `Service online`, `Service unavailable`, or `Checking service`.
+- Shows the backend message returned by the API.
+- Provides a `Check again` action for a manual health check.
+- Updates the local time once per second.
+- Shows a toast notification when the backend request fails.
 
-### `npm start`
+## Tech stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- React 18
+- Create React App (`react-scripts`)
+- Axios for HTTP requests
+- Sass CSS Modules for component styling
+- React Toastify for error notifications
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Requirements
 
-### `npm test`
+- Node.js and npm
+- A running backend that exposes the `/api/v1/a2rp` endpoint
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Run locally
 
-### `npm run build`
+Install dependencies:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm install
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Start the development server:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm start
+```
 
-### `npm run eject`
+The app opens at `http://localhost:3000`.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## API configuration
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The frontend reads the API base URL from `REACT_APP_API_BASE_URL`. Create a `.env.local` file in the project root when you want to point the app at a specific backend:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```env
+REACT_APP_API_BASE_URL=http://127.0.0.1:1198/api/v1
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+If the variable is not set, the current source fallback is:
 
-## Learn More
+- `http://127.0.0.1:1198/api/v1` on `localhost` and `127.0.0.1`
+- `http://3.111.215.242:1198/api/v1` on other hostnames
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The backend response is expected to include a boolean `success` field and, on success, a `message` field. Example:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```json
+{
+  "success": true,
+  "message": "Backend is online"
+}
+```
 
-### Code Splitting
+For a production HTTPS site, configure an HTTPS API URL to avoid browser mixed-content blocking.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Available scripts
 
-### Analyzing the Bundle Size
+| Command | Purpose |
+| --- | --- |
+| `npm start` | Run the development server |
+| `npm run build` | Create an optimized production build in `build/` |
+| `npm run winBuild` | Create a production build with source maps disabled on Windows |
+| `npm test` | Run the Create React App test runner |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Project structure
 
-### Making a Progressive Web App
+```text
+public/                 Static HTML, manifest, and icons
+src/App.js              Dashboard UI and backend request logic
+src/index.js            React application entry point
+src/index.css           Global styles and reset
+src/styles.module.scss  Scoped component styles
+package.json            Dependencies and npm scripts
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Build and deployment
 
-### Advanced Configuration
+Create the production bundle with:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```bash
+npm run build
+```
 
-### Deployment
+Deploy the generated `build/` directory to any static hosting service. Set `REACT_APP_API_BASE_URL` before building so the compiled frontend uses the intended backend URL. The backend must also allow requests from the frontend origin through CORS.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Author
 
-### `npm run build` fails to minify
+**Ashish Ranjan**  
+Full-Stack Web Developer
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Links
+
+- Portfolio: [https://www.ashishranjan.net](https://www.ashishranjan.net)
+- GitHub: [https://github.com/a2rp](https://github.com/a2rp)
+- CodePen: [https://codepen.io/ash1198](https://codepen.io/ash1198)
+- LinkedIn: [https://www.linkedin.com/in/aashishranjan](https://www.linkedin.com/in/aashishranjan)
+- Facebook: [https://www.facebook.com/theash.ashish/](https://www.facebook.com/theash.ashish/)
+- YouTube: [https://www.youtube.com/@ashishranjan-ashz?sub_confirmation=1](https://www.youtube.com/@ashishranjan-ashz?sub_confirmation=1)
+- Email: [ash.ranjan09@gmail.com](mailto:ash.ranjan09@gmail.com)
+
+## Support
+
+- Support: [https://a2rp-donation-page.netlify.app/](https://a2rp-donation-page.netlify.app/)
+- Buy Me a Coffee: [https://buymeacoffee.com/a2rp](https://buymeacoffee.com/a2rp)
+- Patreon: [https://www.patreon.com/a2rp](https://www.patreon.com/a2rp)
