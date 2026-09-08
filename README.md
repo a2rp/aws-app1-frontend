@@ -1,5 +1,7 @@
 # AWS App Frontend
 
+![AWS App Frontend screenshot](./screeshot.png)
+
 A small React-based status dashboard for checking connectivity with the AWS App backend. The interface requests a message from the backend, shows the service state, and displays the browser's local time.
 
 ## What it does
