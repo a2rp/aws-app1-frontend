@@ -43,7 +43,17 @@ function App() {
             <div className={`${styles.status} ${styles[status]}`} role="status" aria-live="polite"><span className={styles.statusDot} aria-hidden="true" />{statusLabel}</div>
             <div className={styles.panel}><span className={styles.label}>Message from backend</span><p>{message}</p></div>
             <div className={styles.meta}><div><span className={styles.label}>Local time</span><strong>{formattedDateTime}</strong></div><button className={styles.button} type="button" onClick={fetchMessage} disabled={status === "loading"}>{status === "loading" ? "Checking..." : "Check again"}</button></div>
-        </section><ToastContainer position="bottom-right" autoClose={5000} theme="dark" /></main>
+        </section><footer className={styles.footer}>
+            <span>Copyright &copy; {new Date().getFullYear()} </span>
+            <a href="https://www.ashishranjan.net" target="_blank" rel="noopener noreferrer">Ashish Ranjan</a>
+            <nav aria-label="Footer links">
+                <a href="https://github.com/a2rp" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="mailto:ash.ranjan09@gmail.com">Email</a>
+                <a href="https://a2rp-donation-page.netlify.app/" target="_blank" rel="noopener noreferrer">Support</a>
+                <a href="https://buymeacoffee.com/a2rp" target="_blank" rel="noopener noreferrer">Buy Me A Coffee</a>
+                <a href="https://patreon.com/a2rp" target="_blank" rel="noopener noreferrer">Patreon</a>
+            </nav>
+        </footer><ToastContainer position="bottom-right" autoClose={5000} theme="dark" /></main>
     );
 }
 
